@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Перевод арабских чисел в римские</title>
+</head>
+<body>
+   <div align="center">
+<form name="conversion_form">
+Число: <input type="text" size="20" name="numeric"><br>
+<input type="radio" name="direction" value="arab-roman" checked>В римские
+<input type="radio" name="direction" value="roman-arab">В арабские<br>
+<input type="button" value="Перевести" onclick="translater()"><br>
+Результат: <b><span id="rez"></span></b><br>
+Код: <input type="text" size="25" name="numerals">
+</form>
+</div>
+
+<script type="text/javascript">
+//массив с арабскими цифрами
+var font_ar = [1,4,5,9,10,40,50,90,100,400,500,900,1000,4000,5000,9000,10000];
+//массив с римскими цифрами
+var font_rom = ["I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M",
+"M&#8577;","&#8577;","&#8577;&#8578;","&#8578;"];
+
+function to_roman(text) {  //функция перевода в римские цифры
+ if (!text) return '';
+ var rezult = '';
+ var n = font_ar.length - 1; //возвращаем число элементов в массиве и -1
+ while (text > 0) {  //пока text больше 0
+    if (text >= font_ar[n]) {  //если text больше или равно определенному элементу в массиве font_ar
+        rezult += font_rom[n]; //rezult= rezult + font_rom[n]
+        text -= font_ar[n]; // text = text - font_ar[n]
+    }
+    else n--;  //иначе n-1 (декремент)
+ }
+ return rezult; //возвращаем rezult, конец выполнения функции
+}
+
+function to_arab(text) {   //функция перевода в арабские цифры
+ var text = text.toUpperCase(); //все символы строки переводим в верхний регистр
+ var rezult = 0;
+ var posit = 0;
+ var n = font_ar.length - 1; //возвращаем число элементов в массиве и -1
+ while (n >= 0 && posit < text.length) { //пока n больше или равно 0 И пока posit меньше числа элементов text
+    if (text.substr(posit, font_rom[n].length) == font_rom[n]) {
+        rezult += font_ar[n];  //rezult= rezult + font_ar[n]
+        posit += font_rom[n].length;  //posit = posit + число элементов в массиве font_rom[n]
+    }
+    else n--;  //иначе n-1 (декремент)
+ }
+ return rezult; //возвращаем rezult, конец выполнения функции
+}
+
+function translater() { //функция передает данные в HTML форму
+ obj = window.document.conversion_form;  //обращаемся к форме посредством глобального объекта
+ str = obj.numeric.value;
+ if (obj.direction[0].checked == true) total = to_roman(str); //если активирована кнопка и возвращает истину то конвертирование в римские цифры
+ else total = to_arab(str); //иначе в арабские
+
+ obj.numerals.value = total;  //вывод результата в поле код
+ rez.innerHTML = total; //получаем доступ результата и выводим на экран
+}
+</script>
+</body>
+</html>
